@@ -25,16 +25,13 @@ cd local_llm_serving
 # 2. Install uv (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 3. Install dependencies using uv
-uv pip install -r requirements.txt
+# 3. Install the package with dependencies
+uv sync
 
-# 4. Install the package in development mode
-uv pip install -e ".[dev]"
-
-# 5. Check your system compatibility
+# 4. Check your system compatibility
 uv run python -m local_llm_serving.utils.compatibility
 
-# 6. Run the main script (auto-detects best backend)
+# 5. Run the main script (auto-detects best backend)
 uv run llm-serve
 ```
 
@@ -185,7 +182,6 @@ local_llm_serving/
 ├── scripts/                   # Demo and utility scripts
 ├── pyproject.toml             # Package configuration and dependencies
 ├── uv.lock                    # Lock file for reproducible builds
-├── requirements.txt           # Dependencies (migrated to pyproject.toml)
 └── README.md                  # This file
 ```
 
