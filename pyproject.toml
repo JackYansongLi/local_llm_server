@@ -22,6 +22,7 @@ dependencies = [
     "ollama>=0.1.0",
     # For additional tools
     "PyPDF2>=3.0.0",
+    "pygments>=2.19.2",
 ]
 
 [project.optional-dependencies]
@@ -35,3 +36,6 @@ dev = [
 
 [project.scripts]
 llm-serve = "local_llm_serving.main:main"
+
+[tool.uv]
+package = true

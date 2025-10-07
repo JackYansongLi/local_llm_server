@@ -117,7 +117,7 @@ def demo_ollama_streaming():
 
 def demo_unified_streaming():
     """Demo with unified ToolCallingAgent that auto-selects backend"""
-    from main import ToolCallingAgent
+    from local_llm_serving.main import ToolCallingAgent
     
     print("="*60)
     print("🎯 Unified Streaming Demo (Auto-detect Backend)")

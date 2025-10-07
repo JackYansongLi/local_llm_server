@@ -11,3 +11,14 @@ wheels/
 # Virtual environments
 .venv
 .claude
+
+# TeX related 
+
+*.fls
+*.log
+*.out
+*.aux
+*.fdb_latexmk
+*.synctex.gz
+
+
