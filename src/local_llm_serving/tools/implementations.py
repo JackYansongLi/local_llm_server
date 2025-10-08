@@ -11,7 +11,6 @@ from datetime import datetime
 import requests
 from io import BytesIO
 import PyPDF2
-import subprocess
 
 
 def get_current_temperature(location: str, unit: str = "celsius") -> str:
@@ -208,29 +207,3 @@ def get_random_number(min_val: int = 1, max_val: int = 100) -> str:
         return f"Random number between {min_val} and {max_val}: {number}"
     except Exception as e:
         return f"Error generating random number: {str(e)}"
-
-
-def cat_file(file_path: str) -> str:
-    """Read and display the contents of a file using the cat shell command"""
-    try:
-        # Use subprocess to execute cat command safely
-        result = subprocess.run(
-            ['cat', file_path],
-            capture_output=True,
-            text=True,
-            timeout=10  # Timeout to prevent hanging on large files
-        )
-
-        if result.returncode == 0:
-            return result.stdout
-        else:
-            return f"Error reading file: {result.stderr}"
-
-    except subprocess.TimeoutExpired:
-        return f"Error: File reading timed out (file may be too large)"
-    except FileNotFoundError:
-        return f"Error: File not found: {file_path}"
-    except PermissionError:
-        return f"Error: Permission denied reading file: {file_path}"
-    except Exception as e:
-        return f"Error reading file {file_path}: {str(e)}"

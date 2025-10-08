@@ -9,8 +9,7 @@ from .implementations import (
     convert_currency,
     execute_python_code,
     parse_pdf_content,
-    get_random_number,
-    cat_file
+    get_random_number
 )
 
 
@@ -136,22 +135,6 @@ class ToolRegistry:
                     }
                 },
                 "required": []
-            }
-        )
-
-        self.register_tool(
-            name="cat_file",
-            function=cat_file,
-            description="Read and display the contents of a file using the cat shell command",
-            parameters={
-                "type": "object",
-                "properties": {
-                    "file_path": {
-                        "type": "string",
-                        "description": "Path to the file to read"
-                    }
-                },
-                "required": ["file_path"]
             }
         )
 
