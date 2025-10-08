@@ -135,10 +135,9 @@ def test_agent_error_propagation():
     print("Test 4: Agent error message formatting")
     print("=" * 60)
     
-    from local_llm_serving.agents.vllm_agent import VLLMToolAgent
+    from local_llm_serving.main import ToolCallingAgent
     
-    # This test would require a running vLLM server, so we'll just show
-    # how errors would be formatted
+    # This test shows how errors would be formatted for the agent
     
     registry = ToolRegistry()
     

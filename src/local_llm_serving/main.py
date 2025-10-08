@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
 Main Entry Point for Tool Calling Demo
-Automatically selects the best backend based on your platform:
-- Linux/Windows with NVIDIA GPU: Uses vLLM
-- Mac/Windows/Linux without GPU: Uses Ollama
+Uses Ollama for universal compatibility across all platforms
 """
 
 import os
@@ -21,82 +19,22 @@ logger = logging.getLogger(__name__)
 
 class ToolCallingAgent:
     """
-    Universal tool calling agent that works on all platforms
-    Automatically selects vLLM (if GPU available) or Ollama
+    Tool calling agent that uses Ollama for universal compatibility
     """
 
-    def __init__(self, backend: Optional[str] = None):
+    def __init__(self):
         """
-        Initialize with automatic backend detection
-
-        Args:
-            backend: Force a specific backend ('vllm', 'ollama', or None for auto)
+        Initialize with Ollama backend
         """
         self.agent = None
-        self.backend_type = backend or self._detect_best_backend()
+        self.backend_type = "ollama"
 
-        logger.info(f"Initializing on {platform.system()} with {self.backend_type}")
+        logger.info(f"Initializing on {platform.system()} with Ollama")
         self._initialize_backend()
 
-    def _detect_best_backend(self) -> str:
-        """Detect the best backend for current platform"""
-        system = platform.system()
-
-        # Check for CUDA support (Linux/Windows with NVIDIA GPU)
-        if system in ["Linux", "Windows"]:
-            try:
-                import torch
-
-                if torch.cuda.is_available():
-                    logger.info("CUDA detected - will use vLLM")
-                    return "vllm"
-            except ImportError:
-                pass
-
-        # Default to Ollama for Mac or systems without CUDA
-        logger.info(f"Using Ollama on {system}")
-        return "ollama"
-
     def _initialize_backend(self):
-        """Initialize the selected backend"""
-        if self.backend_type == "vllm":
-            self._init_vllm()
-        else:
-            self._init_ollama()
-
-    def _init_vllm(self):
-        """Initialize vLLM backend"""
-        try:
-            # Check if vLLM server is running
-            import requests
-            from .config import VLLM_HOST, VLLM_PORT
-
-            server_url = f"http://{VLLM_HOST}:{VLLM_PORT}/health"
-
-            try:
-                response = requests.get(server_url, timeout=1)
-                if response.status_code != 200:
-                    raise ConnectionError("vLLM server not responding")
-            except:
-                # Try to start the server
-                logger.info("Starting vLLM server...")
-                from .server.vllm_server import VLLMServer
-
-                server = VLLMServer()
-                server.start(wait_for_ready=True)
-
-            # Initialize vLLM agent
-            from .agents.vllm_agent import VLLMToolAgent
-            from .config import OPENAI_API_BASE, OPENAI_API_KEY
-
-            self.agent = VLLMToolAgent(api_base=OPENAI_API_BASE, api_key=OPENAI_API_KEY)
-            logger.info("✅ vLLM agent initialized")
-
-        except Exception as e:
-            logger.warning(f"Failed to initialize vLLM: {e}")
-            logger.info("Falling back to Ollama")
-            self.backend_type = "ollama"
-            self._init_ollama()
+        """Initialize the Ollama backend"""
+        self._init_ollama()
 
     def _init_ollama(self):
         """Initialize Ollama backend"""
@@ -529,12 +467,6 @@ def main():
     )
     parser.add_argument("--task", type=str, help="Task to execute (for single mode)")
     parser.add_argument(
-        "--backend",
-        choices=["vllm", "ollama", "auto"],
-        default="auto",
-        help="Backend to use (default: auto-detect)",
-    )
-    parser.add_argument(
         "--info", action="store_true", help="Show system information and exit"
     )
     parser.add_argument(
@@ -561,22 +493,9 @@ def main():
         print(f"  Architecture: {platform.machine()}")
         print(f"  Python: {sys.version.split()[0]}")
 
-        # Check CUDA
-        try:
-            import torch
-
-            cuda_available = torch.cuda.is_available()
-            if cuda_available:
-                print(f"  CUDA: ✅ Available (GPU: {torch.cuda.get_device_name(0)})")
-            else:
-                print("  CUDA: ❌ Not available")
-        except ImportError:
-            print("  CUDA: ❌ PyTorch not installed")
-
         # Check Ollama
         try:
             import ollama
-
             print("  Ollama: ✅ Package installed")
         except ImportError:
             print("  Ollama: ❌ Package not installed")
@@ -586,17 +505,15 @@ def main():
     # Initialize agent
     print("\n⚙️  Initializing agent...")
 
-    backend = None if args.backend == "auto" else args.backend
-
     try:
-        agent = ToolCallingAgent(backend=backend)
+        agent = ToolCallingAgent()
     except SystemExit:
         return 1
     except Exception as e:
         print(f"❌ Failed to initialize: {e}")
         return 1
 
-    print(f"✅ Agent ready! Using {agent.backend_type} backend")
+    print("✅ Agent ready! Using Ollama backend")
 
     # Execute based on mode
     if args.mode == "single":

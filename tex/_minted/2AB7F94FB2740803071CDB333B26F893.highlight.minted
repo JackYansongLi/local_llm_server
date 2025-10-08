@@ -1,9 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{+w}{    }\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{l+s}{\PYGZdq{}Factory method for backend initialization.\PYGZdq{}}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}
-\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{n}{self}\PYG{p}{.}\PYG{n}{backend\PYGZus{}type}\PYG{+w}{ }\PYG{p}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}vllm\PYGZdq{}}\PYG{p}{:}
-\PYG{+w}{        }\PYG{n}{self}\PYG{p}{.}\PYG{n}{\PYGZus{}init\PYGZus{}vllm}\PYG{p}{(}\PYG{p}{)}
-\PYG{+w}{    }\PYG{n}{elif}\PYG{+w}{ }\PYG{n}{self}\PYG{p}{.}\PYG{n}{backend\PYGZus{}type}\PYG{+w}{ }\PYG{p}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}ollama\PYGZdq{}}\PYG{p}{:}
-\PYG{+w}{        }\PYG{n}{self}\PYG{p}{.}\PYG{n}{\PYGZus{}init\PYGZus{}ollama}\PYG{p}{(}\PYG{p}{)}
-\PYG{+w}{    }\PYG{k}{else}\PYG{p}{:}
-\PYG{+w}{        }\PYG{n}{raise}\PYG{+w}{ }\PYG{n}{ValueError}\PYG{p}{(}\PYG{n}{f}\PYG{l+s}{\PYGZdq{}Unsupported backend: \PYGZob{}self.backend\PYGZus{}type\PYGZcb{}\PYGZdq{}}\PYG{p}{)}
-\end{MintedVerbatim}

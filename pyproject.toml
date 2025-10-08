@@ -1,25 +1,19 @@
 [project]
 name = "local-llm-serving"
 version = "0.1.0"
-description = "Universal Tool Calling Demo with vLLM and Ollama support"
+description = "Universal Tool Calling Demo with Ollama support"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    # vLLM and dependencies
-    "vllm>=0.6.0",
-    "torch>=2.0.0",
-    "transformers>=4.36.0",
-    "accelerate>=0.25.0",
+    # Core dependencies for OpenAI-compatible API
     "openai>=1.0.0",
     "python-dotenv>=1.0.0",
     "pydantic>=2.0.0",
     "requests>=2.31.0",
-    "fastapi>=0.104.0",
-    "uvicorn>=0.24.0",
-    # For demo tools
-    "python-weather>=2.0.0",
     # For Ollama support
     "ollama>=0.1.0",
+    # For demo tools
+    "python-weather>=2.0.0",
     # For additional tools
     "pypdf2>=3.0.0",
     "pygments>=2.19.2",

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Universal Tool Calling Demo that demonstrates LLM tool calling across Windows, macOS, and Linux. Automatically selects optimal backend (vLLM for GPU systems, Ollama for CPU systems) with OpenAI-compatible tool calling and streaming support.
+Universal Tool Calling Demo that demonstrates LLM tool calling across Windows, macOS, and Linux using Ollama for universal compatibility with OpenAI-compatible tool calling and streaming support.
 
 ## Development Commands
 
@@ -22,12 +22,8 @@ uv run bash scripts/setup.sh
 
 ### Running the Application
 ```bash
-# Auto-detect backend and run with CLI
+# Run with CLI
 uv run llm-serve
-
-# Force specific backend
-uv run llm-serve --backend ollama    # Force Ollama
-uv run llm-serve --backend vllm      # Force vLLM (requires GPU)
 
 # Run specific modes
 uv run llm-serve --mode examples      # Examples only
@@ -78,11 +74,11 @@ uv run mypy src/local_llm_serving/
 ## Architecture Overview
 
 ### High-Level Design
-The system uses a **universal agent pattern** with automatic backend detection:
-1. `ToolCallingAgent` in `main.py` detects platform capabilities
-2. Routes to appropriate backend (vLLM/Ollama) based on GPU availability
-3. Both backends implement OpenAI-compatible tool calling format
-4. Streaming architecture provides real-time tool execution feedback
+The system uses a **universal Ollama-based architecture**:
+1. `ToolCallingAgent` in `main.py` uses Ollama for all platforms
+2. Ollama provides consistent OpenAI-compatible tool calling format
+3. Streaming architecture provides real-time tool execution feedback
+4. Universal compatibility across Windows, macOS, and Linux
 
 ### Core Components
 
@@ -91,25 +87,20 @@ The system uses a **universal agent pattern** with automatic backend detection:
 - CLI argument parsing and mode selection
 - Streaming/non-streaming response handling
 
-**Backend Implementations (`src/local_llm_serving/agents/`)**
-- `vllm_agent.py`: GPU-accelerated inference with vLLM server management
-- `ollama_agent.py`: Local CPU inference with native Ollama integration
-- Both implement identical streaming and tool calling interfaces
+**Backend Implementation (`src/local_llm_serving/agents/`)**
+- `ollama_agent.py`: Native Ollama integration with OpenAI compatibility
+- Implements streaming and tool calling interfaces
 
 **Tool System (`src/local_llm_serving/tools/`)**
 - `registry.py`: Central tool registry with OpenAI function format
 - `implementations.py`: Built-in tools (weather, time, currency, code, PDF)
 - Tools execute in sandboxed environment with proper error handling
 
-**Server Management (`src/local_llm_serving/server/`)**
-- `vllm_server.py`: Manages vLLM server lifecycle with Hermes tool parser
-- Automatic port allocation and graceful shutdown
-- Health checking and restart capabilities
 
-### Backend Selection Logic
-- **Linux/Windows + NVIDIA GPU + CUDA** → vLLM (optimal performance)
-- **macOS/No GPU/CPU-only** → Ollama (universal compatibility)
-- Selection happens automatically in `ToolCallingAgent.__init__()`
+### Architecture Notes
+- **Ollama Only**: Simplified architecture using Ollama across all platforms
+- **OpenAI Compatibility**: Ollama provides OpenAI-compatible API for tool calling
+- **Universal Setup**: Same installation and configuration for all platforms
 
 ### Tool Calling Architecture
 - **OpenAI-compatible format**: Standard function calling schema
@@ -148,9 +139,9 @@ ollama pull qwen3:0.6b
 ## Configuration
 
 Environment variables (`.env` file):
-- `MODEL_NAME`: Model to use (default: Qwen/Qwen3-0.6B)
-- `VLLM_HOST`: vLLM server host (default: localhost)
-- `VLLM_PORT`: vLLM server port (default: 8000)
+- `MODEL_NAME`: Model to use (default: qwen3:0.6b)
+- `OLLAMA_HOST`: Ollama server host (default: localhost)
+- `OLLAMA_PORT`: Ollama server port (default: 11434)
 - `LOG_LEVEL`: Logging level (default: INFO)
 
 ## Adding Custom Tools
@@ -181,8 +172,7 @@ registry.register_tool(
 ## Important Notes
 
 - Always use `uv run` for Python commands to ensure proper environment
-- vLLM requires NVIDIA GPU with CUDA support and significant VRAM
 - Ollama must be running as a service before starting the application
-- Default model (Qwen3-0.6B) is optimized for tool calling with small footprint
+- Default model (qwen3:0.6b) is optimized for tool calling with small footprint
 - Streaming shows internal reasoning - disable with `--no-stream` for cleaner output
 - Tool execution happens in sandboxed environment with timeout protection

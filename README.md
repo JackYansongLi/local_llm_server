@@ -1,16 +1,14 @@
 # Universal Tool Calling Demo
 
-A cross-platform demonstration of LLM tool calling using standard OpenAI-compatible APIs. Works seamlessly on Windows, macOS, and Linux by automatically selecting the best backend for your system.
+A cross-platform demonstration of LLM tool calling using Ollama. Works seamlessly on Windows, macOS, and Linux with a unified, simple setup.
 
 > **Fork Source**: This project is a fork of [ai-agent-book-projects/week2/local_llm_serving](https://github.com/bojieli/ai-agent-book-projects/tree/main/week2/local_llm_serving) by bojieli, refactored to use modern Python packaging with uv and improved project structure.
 
 ## 🌟 Features
 
-- **Universal Compatibility**: Single entry point (`main.py`) that works on all platforms
-- **Automatic Backend Selection**: 
-  - Uses **vLLM** on Linux/Windows with NVIDIA GPU
-  - Uses **Ollama** on macOS, Windows, or Linux without GPU
-- **Standard Tool Calling**: Only uses OpenAI-compatible tool calling format
+- **Universal Compatibility**: Single entry point that works on all platforms
+- **Simple Setup**: Uses **Ollama** for easy installation and cross-platform support
+- **Standard Tool Calling**: Uses OpenAI-compatible tool calling format
 - **Built-in Tools**: Weather, calculator, time, and easy to add custom tools
 - **Interactive & Example Modes**: Test with examples or chat interactively
 - **🆕 Streaming Support**: Real-time display of thinking process, tool calls, and responses
@@ -28,14 +26,11 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # 3. Install the package with dependencies
 uv sync
 
-# 4. Check your system compatibility
-uv run python -m local_llm_serving.utils.compatibility
-
-# 5. Run the main script (auto-detects best backend)
+# 4. Run the main script
 uv run llm-serve
 ```
 
-That's it! The script automatically detects your platform and uses the appropriate backend.
+That's it! The script uses Ollama for universal compatibility.
 
 ## 📋 Prerequisites
 
@@ -59,13 +54,6 @@ ollama pull qwen3:0.6b
 ```
 
 #### 🪟 Windows
-
-**With NVIDIA GPU:**
-- CUDA toolkit installed
-- NVIDIA drivers 452.39+
-- vLLM will be used automatically
-
-**Without GPU:**
 ```bash
 # Download and install Ollama
 # From: https://ollama.com/download/windows
@@ -75,12 +63,6 @@ ollama pull qwen3:0.6b
 ```
 
 #### 🐧 Linux
-
-**With NVIDIA GPU:**
-- CUDA toolkit installed
-- vLLM will be used automatically
-
-**Without GPU:**
 ```bash
 # Install Ollama
 curl -fsSL https://ollama.com/install.sh | sh
@@ -97,7 +79,7 @@ ollama pull qwen3:0.6b
 ### Basic Usage
 
 ```bash
-# Run with auto-detection (recommended)
+# Run the application
 uv run llm-serve
 
 # Run examples only
@@ -105,10 +87,6 @@ uv run llm-serve --mode examples
 
 # Run interactive mode only
 uv run llm-serve --mode interactive
-
-# Force specific backend
-uv run llm-serve --backend ollama  # Force Ollama
-uv run llm-serve --backend vllm    # Force vLLM (requires GPU)
 
 # Show system info
 uv run llm-serve --info
@@ -169,13 +147,10 @@ local_llm_serving/
 │   ├── main.py                # Entry point with ToolCallingAgent
 │   ├── config.py              # Configuration management
 │   ├── agents/                # Agent implementations
-│   │   ├── vllm_agent.py      # vLLM implementation
 │   │   └── ollama_agent.py    # Ollama implementation
 │   ├── tools/                 # Tool registry and implementations
 │   │   ├── registry.py        # ToolRegistry class
 │   │   └── implementations.py # Individual tool functions
-│   ├── server/                # vLLM server management
-│   │   └── vllm_server.py     # Server lifecycle management
 │   └── utils/                 # Utilities
 │       └── compatibility.py   # Platform detection
 ├── tests/                     # Test suite
@@ -317,15 +292,6 @@ No ad-hoc parsing or custom formats - just the standard that works across platfo
 ollama pull qwen3:0.6b  # Default model used by this project
 ```
 
-### "CUDA not available" (Linux/Windows)
-- Install NVIDIA drivers and CUDA toolkit
-- Or the script will automatically use Ollama instead
-
-### Check System Compatibility
-```bash
-uv run python -m local_llm_serving.utils.compatibility
-```
-
 ## 🤝 Supported Models
 
 ### Default Model:
@@ -336,22 +302,16 @@ uv run python -m local_llm_serving.utils.compatibility
 - **Llama 3.1/3.2** (8B+) - Good tool support
 - **Mistral Nemo** - Great tool calling
 
-### For vLLM:
-- Uses Qwen3-0.6B by default
-- Any model supported by vLLM can be configured
+All models are available through Ollama for easy installation and management.
 
 ## 📚 How It Works
 
-1. **Platform Detection**: `main.py` detects your OS and GPU availability
-2. **Backend Selection**: 
-   - Has NVIDIA GPU? → Uses vLLM for best performance
-   - No GPU or on Mac? → Uses Ollama for local inference
-3. **Tool Execution**: Both backends use standard OpenAI tool calling format
-4. **Response Generation**: Tools are executed and results fed back to the model
+1. **Universal Setup**: Uses Ollama for consistent experience across all platforms
+2. **Tool Execution**: Uses standard OpenAI-compatible tool calling format
+3. **Response Generation**: Tools are executed and results fed back to the model
 
 ## 🔗 References
 
-- [vLLM Documentation](https://docs.vllm.ai/)
 - [Ollama Documentation](https://ollama.com/)
 - [OpenAI Tool Calling](https://platform.openai.com/docs/guides/function-calling)
 
