@@ -12,6 +12,8 @@ wheels/
 .venv
 .claude
 
+logs/
+
 # TeX related 
 
 *.fls

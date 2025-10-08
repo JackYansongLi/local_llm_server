@@ -21,7 +21,7 @@ dependencies = [
     # For Ollama support
     "ollama>=0.1.0",
     # For additional tools
-    "PyPDF2>=3.0.0",
+    "pypdf2>=3.0.0",
     "pygments>=2.19.2",
 ]
 
@@ -39,3 +39,10 @@ llm-serve = "local_llm_serving.main:main"
 
 [tool.uv]
 package = true
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "pytest-cov>=7.0.0",
+]
